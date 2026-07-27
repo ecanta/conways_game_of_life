@@ -32,3 +32,4 @@
 *.app
 /.vs
 /x64
+/conways_game_of_life/x64
