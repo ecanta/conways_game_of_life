@@ -1257,7 +1257,7 @@ static LRESULT CALLBACK WindowProcessor3D(
 		case VK_CONTROL:
 			if (Pasting) {
 				vkcontrol = !vkcontrol;
-				PastePattern();
+				if (CurrentId >= 300) PastePattern();
 
 				InvalidateRect(hwnd, NULL, FALSE);
 				ret 0;
@@ -1324,6 +1324,7 @@ static LRESULT CALLBACK WindowProcessor3D(
 			// ritorno alla griglia precedente
 		case L'Z':
 			if (!Painting) ret 0;
+			if (Pasting) Pasting = vkshift = vkalt = vkcontrol = false;
 			if (!GetAsyncKeyState(VK_CONTROL) & 0x8000) ret 0;
 
 			if (ptr2 > 0) ptr2--;
@@ -1333,6 +1334,7 @@ static LRESULT CALLBACK WindowProcessor3D(
 			// ritorno alla griglia successiva
 		case L'Y':
 			if (!Painting) ret 0;
+			if (Pasting) Pasting = vkshift = vkalt = vkcontrol = false;
 			if (!GetAsyncKeyState(VK_CONTROL) & 0x8000) ret 0;
 
 			if (ptr2 < ptr) ptr2++;
