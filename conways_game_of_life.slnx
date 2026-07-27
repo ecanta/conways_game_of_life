@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="conways_game_of_life/conways_game_of_life.vcxproj" Id="ecf3c48e-5109-4cf5-bd5a-1c2bd327c468" />
+</Solution>
