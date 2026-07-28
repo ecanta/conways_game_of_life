@@ -644,50 +644,21 @@ static void Qclick(int i, int j)
 	else Grid[i][j] = (Grid[i][j] > 0 ? -32 : 1);
 }
 
-// funzione per colorare le caselle in modo avanzato
-static coord ClicCell
-(int xpos, int ypos, RECT client, int oldxpos = -1, int oldypos = -1)
+// funzione che interpola una retta tra due posizioni ricevute del mouse
+static void Connect(int OldexX, int OldexY, int IndexX, int IndexY)
 {
-	if (ypos < NoDrawSpace) ret coord{ -1, -1 };
-
-	// calcolo posizione cursore
-	coord Endpos{
-		Position.X - (client.right - client.left) / 2 + xpos,
-		Position.Y - (client.bottom - client.top) / 2 + ypos - NoDrawSpace / 2
-	};
-
-	// fuori griglia
-	int IndexX = Endpos.X / Pix, IndexY = Endpos.Y / Pix;
-	if (IndexX < 0 or IndexX >= GridSize or IndexY < 0 or IndexY >= GridSize)
-		ret coord{ -1, -1 };
-
-	// click semplice
-	if (oldxpos == -1 and oldypos == -1) {
-		Qclick(IndexX, IndexY);
-		ret coord{ IndexX, IndexY };
-	}
-	// bisogna interpolare
-
-	// calcolo della vecchia posizione
-	coord Startpos{
-		Position.X - (client.right - client.left) / 2 + oldxpos,
-		Position.Y - (client.bottom - client.top) / 2 + oldypos
-			- NoDrawSpace / 2
-	};
-	int OldexX = Startpos.X / Pix, OldexY = Startpos.Y / Pix;
-
 	// caso retta verticale
 	if (IndexX == OldexX) {
-		if (OldexY < IndexY) swap(xpos, oldxpos);
+		if (OldexY < IndexY) swap(OldexY, IndexY);
 		for (int i = IndexY; i <= OldexY; ++i) Qclick(IndexX, i);
-		ret CurrentSelected;
+		ret ;
 	}
 
 	// caso retta orizzontale
 	if (IndexY == OldexY) {
-		if (OldexX < IndexX) swap(xpos, oldxpos);
+		if (OldexX < IndexX) swap(OldexX, IndexX);
 		for (int i = IndexX; i <= OldexX; ++i) Qclick(i, IndexY);
-		ret CurrentSelected;
+		ret;
 	}
 
 	// creazione di un vettore con i punti del rettangolo
@@ -698,7 +669,7 @@ static coord ClicCell
 	int DeltaX{ OldexX - IndexX }, DeltaY{ OldexY - IndexY };
 	vector<vector<int>> cuts(abs(DeltaY) + 1);
 	for (int i = 0; i <= abs(DeltaY); ++i) cuts[i].resize(DeltaX + 1, 0);
-		
+
 	// calcolo dei tagli fatti dalla retta che congiunge inizio e fine
 	double AngCoeff{ (double)DeltaY / DeltaX };
 	for (int j = 0; j < DeltaX; ++j) {
@@ -732,6 +703,40 @@ static coord ClicCell
 			// e' necessaria una riflessione
 			Qclick(IndexX + x, IndexY - y);
 		}
+}
+
+// funzione per colorare le caselle in modo avanzato
+static coord ClicCell
+(int xpos, int ypos, RECT client, int oldxpos = -1, int oldypos = -1)
+{
+	if (ypos < NoDrawSpace) ret coord{ -1, -1 };
+
+	// calcolo posizione cursore
+	coord Endpos{
+		Position.X - (client.right - client.left) / 2 + xpos,
+		Position.Y - (client.bottom - client.top) / 2 + ypos - NoDrawSpace / 2
+	};
+
+	// fuori griglia
+	int IndexX = Endpos.X / Pix, IndexY = Endpos.Y / Pix;
+	if (IndexX < 0 or IndexX >= GridSize or IndexY < 0 or IndexY >= GridSize)
+		ret coord{ -1, -1 };
+
+	// click semplice
+	if (oldxpos == -1 and oldypos == -1) {
+		Qclick(IndexX, IndexY);
+		ret coord{ IndexX, IndexY };
+	}
+
+	// interpolazione
+	coord Startpos{
+		Position.X - (client.right - client.left) / 2 + oldxpos,
+		Position.Y - (client.bottom - client.top) / 2 + oldypos
+			- NoDrawSpace / 2
+	};
+	int OldexX = Startpos.X / Pix, OldexY = Startpos.Y / Pix;
+
+	Connect(OldexX, OldexY, IndexX, IndexY);
 	ret CurrentSelected;
 }
 
@@ -1691,7 +1696,7 @@ int main()
 #ifndef ONE_FILE
 	wc.hIcon = LoadIcon(
 		hInstance,
-		MAKEINTRESOURCE(IDI_ICON5)
+		MAKEINTRESOURCE(IDI_APPICON)
 	);
 #endif
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -1873,12 +1878,12 @@ then click the last cell"
 
 #ifndef ONE_FILE
 	// icone degli strumenti
-	hIconBrushOff  = Icon(IDI_ICON1);
-	hIconRubberOff = Icon(IDI_ICON2);
-	hIconBrushOn   = Icon(IDI_ICON3);
-	hIconRubberOn  = Icon(IDI_ICON4);
-	hIconSelectOff = Icon(IDI_ICON6);
-	hIconSelectOn  = Icon(IDI_ICON7);
+	hIconBrushOff  = Icon(IDI_BRUSH);
+	hIconRubberOff = Icon(IDI_ERASER);
+	hIconBrushOn   = Icon(IDI_BRUSH_ON);
+	hIconRubberOn  = Icon(IDI_ERASER_ON);
+	hIconSelectOff = Icon(IDI_SELECT);
+	hIconSelectOn  = Icon(IDI_SELECT_ON);
 	
 	SendMessage(hBrush , BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIconBrushOff );
 	SendMessage(hRubber, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIconRubberOff);

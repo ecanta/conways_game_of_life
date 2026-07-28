@@ -1,0 +1,32 @@
+name: Build C++ Visual Studio Project
+
+on:
+  push:
+    branches: [ "main" ]  # branch principale
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout del codice
+      uses: actions/checkout@v4
+
+    - name: Configura MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Compila il progetto (Release x64)
+      run: |
+        msbuild /p:Configuration=Release /p:Platform=x64
+
+    - name: Carica l'eseguibile come Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: The_Conway_Multiverse-Windows-x64
+        path: |
+          **/Release/*.exe
+
+          # DLL di dipendenza (se presenti):
+          # **/Release/*.dll

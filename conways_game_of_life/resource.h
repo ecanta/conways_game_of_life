@@ -2,13 +2,14 @@
 // File di inclusione generato con Microsoft Visual C++.
 // Utilizzato da conways_game_of_life.rc
 //
-#define IDI_ICON1                       101
-#define IDI_ICON2                       102
-#define IDI_ICON3                       103
-#define IDI_ICON4                       104
-#define IDI_ICON5                       105
-#define IDI_ICON6                       106
-#define IDI_ICON7                       107
+
+#define IDI_APPICON   40
+#define IDI_BRUSH     51
+#define IDI_ERASER    52
+#define IDI_BRUSH_ON  53
+#define IDI_ERASER_ON 54
+#define IDI_SELECT    55
+#define IDI_SELECT_ON 56
 
 // Next default values for new objects
 // 
