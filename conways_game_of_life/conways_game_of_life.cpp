@@ -1045,7 +1045,7 @@ static LRESULT CALLBACK WindowProcessor3D(
 
 		// impostazione icona del cursore
 	case WM_SETCURSOR: {
-		if (LOWORD(lParam) != HTCLIENT) ret 0;
+		if (LOWORD(lParam) != HTCLIENT) ret DefWindowProc(hwnd, uMsg, wParam, lParam);
 		
 		// ottenimento finestra figlia sotto al mouse
 		POINT pt;
